@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://1056599884.github.io/desktop-tutorial/sitemap-index.xml
