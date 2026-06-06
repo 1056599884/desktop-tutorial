@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SoftwareCard from '../../components/SoftwareCard.astro';
 import { software, getAlternatives, getCategoryName } from '../../lib/software';
+import { sitePath } from '../../lib/paths';
 
 export function getStaticPaths() {
   return software.map((item) => ({
@@ -21,7 +22,7 @@ const seoDescription = `${item.name}：${item.description} 收录官方主页、
     <div class="container-page grid gap-8 py-10 lg:grid-cols-[1fr_320px]">
       <div>
         <div class="flex flex-col gap-5 sm:flex-row sm:items-center">
-          <img src={item.logo} alt={`${item.name} 图标`} class="size-20 rounded-xl border border-slate-200 bg-slate-50 p-3" />
+          <img src={sitePath(item.logo)} alt={`${item.name} 图标`} class="size-20 rounded-xl border border-slate-200 bg-slate-50 p-3" />
           <div>
             <p class="mb-2 text-sm font-semibold text-brand-700">{getCategoryName(item.category)}</p>
             <h1 class="text-3xl font-bold text-slate-950">{item.name}</h1>
@@ -95,8 +96,8 @@ const seoDescription = `${item.name}：${item.description} 收录官方主页、
         <h2 class="text-base font-semibold text-slate-950">类似软件推荐</h2>
         <div class="mt-4 grid gap-3">
           {alternatives.map((alternative) => (
-            <a href={`/software/${alternative.slug}`} class="flex items-center gap-3 rounded-lg border border-slate-200 p-3 hover:border-brand-200">
-              <img src={alternative.logo} alt={`${alternative.name} 图标`} class="size-9 rounded-md bg-slate-50 p-1.5" />
+            <a href={sitePath(`/software/${alternative.slug}`)} class="flex items-center gap-3 rounded-lg border border-slate-200 p-3 hover:border-brand-200">
+              <img src={sitePath(alternative.logo)} alt={`${alternative.name} 图标`} class="size-9 rounded-md bg-slate-50 p-1.5" />
               <span class="text-sm font-semibold text-slate-800">{alternative.name}</span>
             </a>
           ))}

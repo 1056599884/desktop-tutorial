@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { software } from '../lib/software';
 import { categories } from '../data/categories';
+import { sitePath } from '../lib/paths';
 
 const searchableSoftware = software.map((item) => ({
   ...item,
@@ -27,6 +28,7 @@ const searchableSoftware = software.map((item) => ({
   <script>
     import Fuse from 'fuse.js';
 
+    const basePath = document.getElementById('site-base')?.textContent ?? '/';
     const software = JSON.parse(document.getElementById('software-data')?.textContent ?? '[]');
     const input = document.getElementById('search-input');
     const resultsEl = document.getElementById('search-results');
@@ -49,21 +51,26 @@ const searchableSoftware = software.map((item) => ({
         .replaceAll("'", '&#039;');
     }
 
+    function withBase(path) {
+      const value = String(path);
+      return basePath + (value.startsWith('/') ? value.slice(1) : value);
+    }
+
     function card(item) {
       const tags = item.tags.slice(0, 3).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join('');
       return `
         <article class="card flex h-full flex-col p-5">
           <div class="mb-4 flex items-start gap-4">
-            <img src="${escapeHtml(item.logo)}" alt="${escapeHtml(item.name)} 图标" class="size-12 rounded-lg border border-slate-200 bg-slate-50 p-2" loading="lazy" />
+            <img src="${escapeHtml(withBase(item.logo))}" alt="${escapeHtml(item.name)} 图标" class="size-12 rounded-lg border border-slate-200 bg-slate-50 p-2" loading="lazy" />
             <div class="min-w-0">
-              <h2 class="truncate text-lg font-semibold text-slate-950"><a href="/software/${escapeHtml(item.slug)}" class="hover:text-brand-700">${escapeHtml(item.name)}</a></h2>
+              <h2 class="truncate text-lg font-semibold text-slate-950"><a href="${escapeHtml(basePath)}software/${escapeHtml(item.slug)}" class="hover:text-brand-700">${escapeHtml(item.name)}</a></h2>
               <p class="mt-1 text-sm text-slate-500">${escapeHtml(item.categoryName)} · ${escapeHtml(item.license)}</p>
             </div>
           </div>
           <p class="line-clamp-3 flex-1 text-sm leading-6 text-slate-600">${escapeHtml(item.description)}</p>
           <div class="mt-4 flex flex-wrap gap-2">${tags}</div>
           <div class="mt-5 flex items-center justify-between gap-3">
-            <a href="/software/${escapeHtml(item.slug)}" class="text-sm font-semibold text-brand-700 hover:text-brand-500">查看详情</a>
+            <a href="${escapeHtml(basePath)}software/${escapeHtml(item.slug)}" class="text-sm font-semibold text-brand-700 hover:text-brand-500">查看详情</a>
             <a href="${escapeHtml(item.officialUrl)}" target="_blank" rel="noopener noreferrer" class="button-secondary px-3 py-1.5">官网</a>
           </div>
         </article>
@@ -75,7 +82,7 @@ const searchableSoftware = software.map((item) => ({
       const items = trimmed ? fuse.search(trimmed).map((result) => result.item) : software;
       resultsEl.innerHTML = items.map(card).join('');
       countEl.textContent = trimmed ? `找到 ${items.length} 个相关结果` : `共收录 ${items.length} 个软件`;
-      const nextUrl = trimmed ? `/search?q=${encodeURIComponent(trimmed)}` : '/search';
+      const nextUrl = trimmed ? `${basePath}search?q=${encodeURIComponent(trimmed)}` : `${basePath}search`;
       window.history.replaceState(null, '', nextUrl);
     }
 
@@ -83,5 +90,6 @@ const searchableSoftware = software.map((item) => ({
     input.addEventListener('input', () => render(input.value));
     render(initialQuery);
   </script>
+  <script id="site-base" type="application/json" set:html={JSON.stringify(sitePath('/'))} />
   <script id="software-data" type="application/json" set:html={JSON.stringify(searchableSoftware)} />
 </BaseLayout>

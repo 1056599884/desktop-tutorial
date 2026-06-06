@@ -4,6 +4,7 @@ import SoftwareCard from '../components/SoftwareCard.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import { categories } from '../data/categories';
 import { software, sortByUpdatedAt } from '../lib/software';
+import { sitePath } from '../lib/paths';
 
 const hotSoftware = software.filter((item) => item.isHot).slice(0, 4);
 const latestSoftware = sortByUpdatedAt(software).slice(0, 6);
@@ -17,7 +18,7 @@ const recommendedSoftware = software.filter((item) => item.isRecommended).slice(
         <p class="mb-4 text-sm font-semibold text-brand-700">正版免费软件 · 开源工具 · 官方下载入口</p>
         <h1 class="max-w-3xl text-4xl font-bold tracking-normal text-slate-950 sm:text-5xl">免费软件导航 - 正版软件与开源工具资源库</h1>
         <p class="mt-5 max-w-2xl text-base leading-8 text-slate-600">面向中文用户的软件工具箱，整理高质量免费软件、开源项目、官方下载安装入口和入门教程，避免误入下载站和非官方渠道。</p>
-        <form action="/search" class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <form action={sitePath('/search')} class="mt-8 flex flex-col gap-3 sm:flex-row">
           <input name="q" type="search" placeholder="搜索软件名称、分类、标签或简介" class="min-h-12 flex-1 rounded-lg border border-slate-300 bg-white px-4 text-base outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-100" />
           <button class="button-primary min-h-12 px-6" type="submit">搜索</button>
         </form>
@@ -27,8 +28,8 @@ const recommendedSoftware = software.filter((item) => item.isRecommended).slice(
       </div>
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
         {hotSoftware.slice(0, 3).map((item) => (
-          <a href={`/software/${item.slug}`} class="card flex items-center gap-4 p-4 hover:border-brand-200">
-            <img src={item.logo} alt={`${item.name} 图标`} class="size-12 rounded-lg border border-slate-200 bg-slate-50 p-2" />
+          <a href={sitePath(`/software/${item.slug}`)} class="card flex items-center gap-4 p-4 hover:border-brand-200">
+            <img src={sitePath(item.logo)} alt={`${item.name} 图标`} class="size-12 rounded-lg border border-slate-200 bg-slate-50 p-2" />
             <div>
               <div class="font-semibold text-slate-950">{item.name}</div>
               <div class="mt-1 text-sm text-slate-600">{item.description}</div>
@@ -50,7 +51,7 @@ const recommendedSoftware = software.filter((item) => item.isRecommended).slice(
     <SectionHeader eyebrow="分类入口" title="按使用场景浏览" description="覆盖桌面系统、移动工具、图片视频、办公效率、AI 与开源软件。" />
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
       {categories.map((category) => (
-        <a href={`/category/${category.slug}`} class="card p-4 hover:border-brand-200">
+        <a href={sitePath(`/category/${category.slug}`)} class="card p-4 hover:border-brand-200">
           <h3 class="font-semibold text-slate-950">{category.name}</h3>
           <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">{category.description}</p>
         </a>
@@ -59,7 +60,7 @@ const recommendedSoftware = software.filter((item) => item.isRecommended).slice(
   </section>
 
   <section class="container-page py-8">
-    <SectionHeader eyebrow="最新收录" title="最近更新的软件" href="/search" linkText="查看全部" />
+    <SectionHeader eyebrow="最新收录" title="最近更新的软件" href={sitePath('/search')} linkText="查看全部" />
     <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {latestSoftware.map((item) => <SoftwareCard item={item} />)}
     </div>

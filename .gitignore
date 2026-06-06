@@ -4,6 +4,8 @@ dist/
 
 astro-dev.log
 astro-dev.err.log
+wrangler-login.log
+wrangler-login.err.log
 npm-debug.log*
 
 .DS_Store
