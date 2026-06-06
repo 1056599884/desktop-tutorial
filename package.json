@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "deploy:github-pages": "npm run build && powershell -ExecutionPolicy Bypass -File scripts/deploy-github-pages.ps1",
     "preview": "astro preview",
     "astro": "astro"
   },
